@@ -67,22 +67,52 @@ while run:
     pygame.display.set_caption("<Hello Word!/>")
 
     uielement = UIElement(
-        center_position=(400, 400),
-        font_size=30,
+        center_position=(400, 100),
+        font_size=60,
         bg_color=cor_fundo,
-        text_color=cor_fonte,
-        text="Hello World",
+        text_color=roxo,
+        text="<Hello World!/>",
     )
 
-    # main loop
+    inicio = UIElement(
+        center_position=(400, 300),
+        font_size=40,
+        bg_color=cor_fundo,
+        text_color=cor_fonte,
+        text="Jogar",
+    )
+
+    como = UIElement(
+        center_position=(400, 400),
+        font_size=40,
+        bg_color=cor_fundo,
+        text_color=cor_fonte,
+        text="Como Jogar",
+    )
+
+    sair = UIElement(
+        center_position=(400, 500),
+        font_size=40,
+        bg_color=cor_fundo,
+        text_color=cor_fonte,
+        text="Sair",
+    )
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
     screen.fill(cor_fundo)
 
-    uielement.update(pygame.mouse.get_pos())
+    inicio.update(pygame.mouse.get_pos())
+    inicio.draw(screen)
+    como.update(pygame.mouse.get_pos())
+    como.draw(screen)
+    sair.update(pygame.mouse.get_pos())
+    sair.draw(screen)
+    # uielement.update(pygame.mouse.get_pos())
     uielement.draw(screen)
+
     pygame.display.flip()
 
 pygame.quit()
