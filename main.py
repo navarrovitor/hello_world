@@ -6,11 +6,11 @@ pygame.mixer.init()
 larg, alt = 800, 400
 run = True
 tela = 0
-pygame.mixer.music.load("song.mp3")
+pygame.mixer.music.load("resources/song.mp3")
 play = True
 
 
-bg = pygame.image.load("blackhole.png")
+bg = pygame.image.load("resources/blackhole.png")
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
 cor_btn = (69, 72, 81)
