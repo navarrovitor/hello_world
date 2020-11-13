@@ -27,8 +27,11 @@ def texto(text, pos, ft=fonte_txt, cor=cor_fonte):
     pygame.display.update()
 
 
-# def botao(pos):
-#     texto()
+def botao(text, pos):
+    pygame.draw.rect(win, cor_btn, ((pos[0] - 50, pos[1] - 15), (200, 50)))
+    txt = fonte_txt.render(text, 1, cor_fonte)
+    win.blit(txt, pos)
+    pygame.display.update()
 
 
 while run:
@@ -38,14 +41,10 @@ while run:
         if tela == 0:
             win.blit(bg, (0, 0))
             texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
-            pygame.draw.rect(win, cor_btn, ((550, 50), (200, 50)))
-            texto("PLAY", (620, 65))
-            pygame.draw.rect(win, cor_btn, ((550, 125), (200, 50)))
-            texto("HOW TO PLAY", (600, 140))
-            pygame.draw.rect(win, cor_btn, ((550, 200), (200, 50)))
-            texto("SETTINGS", (600, 215))
-            pygame.draw.rect(win, cor_btn, ((550, 275), (200, 50)))
-            texto("QUIT", (600, 300))
+            botao("PLAY", (600, 65))
+            botao("HOW TO PLAY", (600, 140))
+            botao("SETTINGS", (600, 215))
+            botao("QUIT", (600, 300))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if 550 <= mouse_pos[0] <= 750 and 50 <= mouse_pos[1] <= 100:
@@ -73,8 +72,7 @@ while run:
                 "O objetivo do jogo é passar pelos desafios referentes a programação.",
                 ((50, 115), (115, 75)),
             )
-            texto("Voltar ao Menu", (100, 320))
-            pygame.draw.rect(win, cor_btn, ((50, 300), (200, 50)), 3)
+            botao("VOLTAR", (100, 320))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if 50 <= mouse_pos[0] <= 250 and 300 <= mouse_pos[1] <= 350:
@@ -82,12 +80,9 @@ while run:
         if tela == 3:
             win.fill(cor_fundo)
             texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
-            pygame.draw.rect(win, cor_btn, ((550, 50), (200, 50)))
-            texto("Desligar Música", (575, 65))
-            pygame.draw.rect(win, cor_btn, ((550, 125), (200, 50)))
-            texto("Ligar Música", (575, 140))
-            pygame.draw.rect(win, cor_btn, ((50, 325), (200, 50)))
-            texto("VOLTAR", (120, 340))
+            botao("Desligar Música", (575, 65))
+            botao("Ligar Música", (575, 140))
+            botao("VOLTAR", (120, 340))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if 50 <= mouse_pos[0] <= 250 and 325 <= mouse_pos[1] <= 375:
