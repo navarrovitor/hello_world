@@ -1,31 +1,39 @@
-import pygame
+import pygame, time
 
 pygame.init()
 pygame.mixer.init()
 
 larg, alt = 800, 400
 run = True
-tela = 0
-pygame.mixer.music.load("resources/song.mp3")
+tela = -1
 play = True
 
 
+pygame.mixer.music.load("resources/song.mp3")
 bg = pygame.image.load("resources/blackhole.png")
+logo = pygame.image.load("resources/logo_transparent.png")
+logo = pygame.transform.scale(logo, (300, 300))
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
+
+# logo do início do jogo
+ret_logo = logo.get_rect()
+vel_logo = [1, 1]
+
+# cores
 cor_btn = (69, 72, 81)
 cor_btn_clicked = (47, 49, 55)
-cor_fonte = (0, 0, 0)
 cor_fundo = (228, 187, 151)
+black = (0, 0, 0)
 
+# setup do display
 win = pygame.display.set_mode((larg, alt))
 pygame.display.set_caption("Hello World")
 
 
-def texto(text, pos, ft=fonte_txt, cor=cor_fonte):
+def texto(text, pos, ft=fonte_txt, cor=black):
     txt = ft.render(text, 1, cor)
     win.blit(txt, pos)
-    # pygame.display.update()
 
 
 class button:
@@ -47,7 +55,7 @@ class button:
             pygame.draw.rect(
                 win, self.cor, (self.x, self.y, self.width, self.height), 0
             )
-        texto = fonte_txt.render(self.txt, 1, cor_fonte)
+        texto = fonte_txt.render(self.txt, 1, black)
         win.blit(
             texto,
             (
@@ -65,22 +73,44 @@ class button:
 
 # BOTÕES
 
+# botão para tela do jogo
 play_button = button(cor_btn, 550, 50, 200, 50, "JOGAR")
+# botão para tela de como jogar
 how_to_play_button = button(cor_btn, 550, 125, 200, 50, "COMO JOGAR")
+# botão para tela de configurações
 settings_button = button(cor_btn, 550, 200, 200, 50, "CONFIGURAÇÕES")
+# botão para sair do jogo
 quit_button = button(cor_btn, 550, 275, 200, 50, "SAIR")
-volume_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
+# botão para ligar ou desligar música
+music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
+# botão para voltar para a tela inicial
 back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
 
 pygame.mixer.music.play()
 while run:
 
+    # tela do logo
+    if tela == -1:
+        win.fill(black)
+        win.blit(logo, ret_logo)
+        ret_logo = ret_logo.move(vel_logo)
+        if ret_logo.left < 0 or ret_logo.right > larg:
+            vel_logo[0] = -vel_logo[0]
+        if ret_logo.top < 0 or ret_logo.bottom > alt:
+            vel_logo[1] = -vel_logo[1]
+        time.sleep(10 / 5000)
+
     # EVENTOS
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
         if event.type == pygame.QUIT:
             run = False
+
+        if tela == -1:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                tela = 0
+
         if tela == 0:
             win.blit(bg, (0, 0))
             texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
@@ -98,9 +128,11 @@ while run:
                 if quit_button.isOver(pos):
                     pygame.time.delay(500)
                     run = False
+
         if tela == 1:
             win.fill(cor_fundo)
             # PLAY
+
         if tela == 2:
             # como jogar
             if event.type == pygame.QUIT:
@@ -119,16 +151,17 @@ while run:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isOver(pos):
                     tela = 0
+
         if tela == 3:
             # SETTINGS
             win.fill(cor_fundo)
             texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
             back_button.draw()
-            volume_button.draw()
+            music_button.draw()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # MÚSICA LIGADA
-                if volume_button.isOver(pos):
-                    volume_button.clicked = not volume_button.clicked
+                if music_button.isOver(pos):
+                    music_button.clicked = not music_button.clicked
                     play = not play
                     if play:
                         pygame.mixer.music.play()
