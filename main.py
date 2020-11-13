@@ -68,15 +68,13 @@ play_button = button(cor_btn, 550, 50, 200, 50, "JOGAR")
 how_to_play_button = button(cor_btn, 550, 125, 200, 50, "COMO JOGAR")
 settings_button = button(cor_btn, 550, 200, 200, 50, "CONFIGURAÇÕES")
 quit_button = button(cor_btn, 550, 275, 200, 50, "SAIR")
-volume_button = button(cor_btn, 525, 50, 200, 50, "MÚSICA")
+volume_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
 back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
+
+pygame.mixer.music.play()
 while run:
     # MÚSICA
-    if play:
-        pygame.mixer.music.play()
-    else:
-        pygame.mixer.music.stop()
 
     # EVENTOS
     for event in pygame.event.get():
@@ -131,6 +129,10 @@ while run:
                 if volume_button.isOver(pos):
                     volume_button.clicked = not volume_button.clicked
                     play = not play
+                    if play:
+                        pygame.mixer.music.play()
+                    else:
+                        pygame.mixer.music.stop()
                 if back_button.isOver(pos):
                     tela = 0
 
