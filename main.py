@@ -24,14 +24,14 @@ pygame.display.set_caption("Hello World")
 def texto(text, pos, ft=fonte_txt, cor=cor_fonte):
     txt = ft.render(text, 1, cor)
     win.blit(txt, pos)
-    pygame.display.update()
+    # pygame.display.update()
 
 
 def botao(text, pos):
     pygame.draw.rect(win, cor_btn, ((pos[0] - 50, pos[1] - 15), (200, 50)))
     txt = fonte_txt.render(text, 1, cor_fonte)
     win.blit(txt, pos)
-    pygame.display.update()
+    # pygame.display.update()
 
 
 while run:
