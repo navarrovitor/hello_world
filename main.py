@@ -64,6 +64,7 @@ class button:
 
 
 # BOTÕES
+
 play_button = button(cor_btn, 550, 50, 200, 50, "JOGAR")
 how_to_play_button = button(cor_btn, 550, 125, 200, 50, "COMO JOGAR")
 settings_button = button(cor_btn, 550, 200, 200, 50, "CONFIGURAÇÕES")
@@ -74,7 +75,6 @@ back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
 pygame.mixer.music.play()
 while run:
-    # MÚSICA
 
     # EVENTOS
     for event in pygame.event.get():
@@ -126,6 +126,7 @@ while run:
             back_button.draw()
             volume_button.draw()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # MÚSICA LIGADA
                 if volume_button.isOver(pos):
                     volume_button.clicked = not volume_button.clicked
                     play = not play
