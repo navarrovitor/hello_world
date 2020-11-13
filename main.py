@@ -1,118 +1,109 @@
 import pygame
-import pygame.freetype
-from pygame.sprite import Sprite
-from pygame.rect import Rect
 
-cor_fundo = (228, 187, 151)
-cor_fonte = (183, 93, 105)
-azul = (161, 252, 223)
-roxo = (55, 37, 73)
-branco = (234, 205, 194)
-fonte = "Roboto"
+pygame.init()
+pygame.mixer.init()
 
+larg, alt = 800, 400
 run = True
+tela = 0
+pygame.mixer.music.load("song.mp3")
+pygame.mixer.music.play()
 
 
-def create_text(text, font_size, text_color, bg_color):
-    font = pygame.freetype.SysFont(fonte, font_size, bold=True)
-    surface, _ = font.render(text=text, fgcolor=text_color, bgcolor=bg_color)
-    return surface.convert_alpha()
+bg = pygame.image.load("blackhole.png")
+fonte_ttl = pygame.font.SysFont("roboto", 40)
+fonte_txt = pygame.font.SysFont("roboto", 20)
+cor_btn = (69, 72, 81)
+cor_fonte = (0, 0, 0)
+cor_fundo = (228, 187, 151)
+
+win = pygame.display.set_mode((larg, alt))
+pygame.display.set_caption("Hello World")
 
 
-class UIElement(Sprite):
-    def __init__(self, center_position, text, font_size, bg_color, text_color):
-        self.mouse_over = False
+def texto(text, pos, ft=fonte_txt, cor=cor_fonte):
+    txt = ft.render(text, 1, cor)
+    win.blit(txt, pos)
+    pygame.display.update()
 
-        default_image = create_text(
-            text=text, font_size=font_size, text_color=text_color, bg_color=bg_color
-        )
 
-        highlighted_image = create_text(
-            text=text,
-            font_size=font_size * 1.2,
-            text_color=text_color,
-            bg_color=bg_color,
-        )
-
-        self.images = [default_image, highlighted_image]
-        self.rects = [
-            default_image.get_rect(center=center_position),
-            highlighted_image.get_rect(center=center_position),
-        ]
-
-        super().__init__()
-
-    @property
-    def image(self):
-        return self.images[1] if self.mouse_over else self.images[0]
-
-    @property
-    def rect(self):
-        return self.rects[1] if self.mouse_over else self.rects[0]
-
-    def update(self, mouse_pos):
-        if self.rect.collidepoint(mouse_pos):
-            self.mouse_over = True
-        else:
-            self.mouse_over = False
-
-    def draw(self, surface):
-        surface.blit(self.image, self.rect)
+# def botao(pos):
+#     texto()
 
 
 while run:
-    pygame.init()
-
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption("<Hello Word!/>")
-
-    uielement = UIElement(
-        center_position=(400, 100),
-        font_size=60,
-        bg_color=cor_fundo,
-        text_color=roxo,
-        text="<Hello World!/>",
-    )
-
-    inicio = UIElement(
-        center_position=(400, 300),
-        font_size=40,
-        bg_color=cor_fundo,
-        text_color=cor_fonte,
-        text="Jogar",
-    )
-
-    como = UIElement(
-        center_position=(400, 400),
-        font_size=40,
-        bg_color=cor_fundo,
-        text_color=cor_fonte,
-        text="Como Jogar",
-    )
-
-    sair = UIElement(
-        center_position=(400, 500),
-        font_size=40,
-        bg_color=cor_fundo,
-        text_color=cor_fonte,
-        text="Sair",
-    )
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if tela == 0:
+            win.blit(bg, (0, 0))
+            texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
+            pygame.draw.rect(win, cor_btn, ((550, 50), (200, 50)))
+            texto("PLAY", (620, 65))
+            pygame.draw.rect(win, cor_btn, ((550, 125), (200, 50)))
+            texto("HOW TO PLAY", (600, 140))
+            pygame.draw.rect(win, cor_btn, ((550, 200), (200, 50)))
+            texto("SETTINGS", (600, 215))
+            pygame.draw.rect(win, cor_btn, ((550, 275), (200, 50)))
+            texto("QUIT", (600, 300))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if 550 <= mouse_pos[0] <= 750 and 50 <= mouse_pos[1] <= 100:
+                    tela = 1
+                if 550 <= mouse_pos[0] <= 750 and 125 <= mouse_pos[1] <= 175:
+                    tela = 2
+                if 550 <= mouse_pos[0] <= 750 and 200 <= mouse_pos[1] <= 250:
+                    tela = 3
+                if 550 <= mouse_pos[0] <= 750 and 275 <= mouse_pos[1] <= 325:
+                    tela = 4
+        if tela == 1:
+            win.fill(cor_fundo)
+            # PLAY
+        if tela == 2:
+            # como jogar
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            win.fill(cor_fundo)
+            texto("Como Jogar?", (50, 50), fonte_ttl, (255, 255, 255))
+            texto(
+                "Você poderá controlar o jogador de sua escolha com os botões do teclado.",
+                ((50, 100), (100, 70)),
+            )
+            texto(
+                "O objetivo do jogo é passar pelos desafios referentes a programação.",
+                ((50, 115), (115, 75)),
+            )
+            texto("Voltar ao Menu", (100, 320))
+            pygame.draw.rect(win, cor_btn, ((50, 300), (200, 50)), 3)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if 50 <= mouse_pos[0] <= 250 and 300 <= mouse_pos[1] <= 350:
+                    tela = 0
+        if tela == 3:
+            win.fill(cor_fundo)
+            texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
+            pygame.draw.rect(win, cor_btn, ((550, 50), (200, 50)))
+            texto("Desligar Música", (575, 65))
+            pygame.draw.rect(win, cor_btn, ((550, 125), (200, 50)))
+            texto("Ligar Música", (575, 140))
+            pygame.draw.rect(win, cor_btn, ((50, 325), (200, 50)))
+            texto("VOLTAR", (120, 340))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if 50 <= mouse_pos[0] <= 250 and 325 <= mouse_pos[1] <= 375:
+                    tela = 0
+                if 550 <= mouse_pos[0] <= 750 and 125 <= mouse_pos[1] <= 175:
+                    pygame.mixer.music.play()
+                if 550 <= mouse_pos[0] <= 750 and 50 <= mouse_pos[1] <= 100:
+                    pygame.mixer.music.stop()
 
-    screen.fill(cor_fundo)
+            # SETTINGS
+        if tela == 4:
+            pygame.time.delay(500)
+            run = False
+            # QUIT
 
-    inicio.update(pygame.mouse.get_pos())
-    inicio.draw(screen)
-    como.update(pygame.mouse.get_pos())
-    como.draw(screen)
-    sair.update(pygame.mouse.get_pos())
-    sair.draw(screen)
-    # uielement.update(pygame.mouse.get_pos())
-    uielement.draw(screen)
+    pygame.display.update()
 
-    pygame.display.flip()
 
 pygame.quit()
