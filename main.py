@@ -213,7 +213,7 @@ while run:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 tela = 0
 
-        if tela == 0:
+        elif tela == 0:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button.isClicked(pos):
                     tela = 1
@@ -225,17 +225,17 @@ while run:
                     pygame.time.delay(500)
                     run = False
 
-        if tela == 1:
+        elif tela == 1:
             pass
             # PLAY
 
-        if tela == 2:
+        elif tela == 2:
             # como jogar
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isClicked(pos):
                     tela = 0
 
-        if tela == 3:
+        elif tela == 3:
             # SETTINGS
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # MÚSICA LIGADA
