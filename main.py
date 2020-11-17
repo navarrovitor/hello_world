@@ -13,6 +13,30 @@ pygame.mixer.music.load("resources/song.mp3")
 bg = pygame.image.load("resources/blackhole.png")
 logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
+
+walkLeft = [
+    pygame.image.load("resources/character/L1.png"),
+    pygame.image.load("resources/character/L2.png"),
+    pygame.image.load("resources/character/L3.png"),
+    pygame.image.load("resources/character/L4.png"),
+    pygame.image.load("resources/character/L5.png"),
+    pygame.image.load("resources/character/L6.png"),
+    pygame.image.load("resources/character/L7.png"),
+    pygame.image.load("resources/character/L8.png"),
+    pygame.image.load("resources/character/L9.png"),
+]
+walkRight = [
+    pygame.image.load("resources/character/R1.png"),
+    pygame.image.load("resources/character/R2.png"),
+    pygame.image.load("resources/character/R3.png"),
+    pygame.image.load("resources/character/R4.png"),
+    pygame.image.load("resources/character/R5.png"),
+    pygame.image.load("resources/character/R6.png"),
+    pygame.image.load("resources/character/R7.png"),
+    pygame.image.load("resources/character/R8.png"),
+    pygame.image.load("resources/character/R9.png"),
+]
+
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
 
