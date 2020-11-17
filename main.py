@@ -6,6 +6,7 @@ pygame.mixer.init()
 larg, alt = 800, 400
 run = True
 tela = -1
+fase = 0
 play = True
 
 
@@ -101,7 +102,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 10
+        self.vel = 5
         self.walkCount = 0
         self.left = False
         self.right = False
