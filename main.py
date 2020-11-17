@@ -141,7 +141,7 @@ music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
-hero = boneco(50, 300, 64, 64)
+hero = boneco(50, 300, 128, 128)
 pygame.mixer.music.play()
 while run:
 
