@@ -64,7 +64,7 @@ class button:
             ),
         )
 
-    def isOver(self, pos):
+    def isClicked(self, pos):
         if pos[0] > self.x and pos[0] < self.x + self.width:
             if pos[1] > self.y and pos[1] < self.y + self.height:
                 return True
@@ -90,7 +90,7 @@ back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 pygame.mixer.music.play()
 while run:
 
-    # tela do logo
+    # telas
     if tela == -1:
         win.fill(black)
         win.blit(logo, ret_logo)
@@ -101,9 +101,40 @@ while run:
             vel_logo[1] = -vel_logo[1]
         time.sleep(10 / 5000)
 
+    if tela == 0:
+        win.blit(bg, (0, 0))
+        texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
+        play_button.draw()
+        how_to_play_button.draw()
+        settings_button.draw()
+        quit_button.draw()
+
+    if tela == 1:
+        win.fill(cor_fundo)
+
+    if tela == 2:
+        win.fill(cor_fundo)
+        texto("Como Jogar?", (50, 50), fonte_ttl, (255, 255, 255))
+        texto(
+            "Você poderá controlar o jogador de sua escolha com os botões do teclado.",
+            ((50, 100), (100, 70)),
+        )
+        texto(
+            "O objetivo do jogo é passar pelos desafios referentes a programação.",
+            ((50, 115), (115, 75)),
+        )
+        back_button.draw()
+
+    if tela == 3:
+        win.fill(cor_fundo)
+        texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
+        back_button.draw()
+        music_button.draw()
+
     # EVENTOS
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
+
         if event.type == pygame.QUIT:
             run = False
 
@@ -112,62 +143,39 @@ while run:
                 tela = 0
 
         if tela == 0:
-            win.blit(bg, (0, 0))
-            texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
-            play_button.draw()
-            how_to_play_button.draw()
-            settings_button.draw()
-            quit_button.draw()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if play_button.isOver(pos):
+                if play_button.isClicked(pos):
                     tela = 1
-                if how_to_play_button.isOver(pos):
+                if how_to_play_button.isClicked(pos):
                     tela = 2
-                if settings_button.isOver(pos):
+                if settings_button.isClicked(pos):
                     tela = 3
-                if quit_button.isOver(pos):
+                if quit_button.isClicked(pos):
                     pygame.time.delay(500)
                     run = False
 
         if tela == 1:
-            win.fill(cor_fundo)
+            pass
             # PLAY
 
         if tela == 2:
             # como jogar
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            win.fill(cor_fundo)
-            texto("Como Jogar?", (50, 50), fonte_ttl, (255, 255, 255))
-            texto(
-                "Você poderá controlar o jogador de sua escolha com os botões do teclado.",
-                ((50, 100), (100, 70)),
-            )
-            texto(
-                "O objetivo do jogo é passar pelos desafios referentes a programação.",
-                ((50, 115), (115, 75)),
-            )
-            back_button.draw()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if back_button.isOver(pos):
+                if back_button.isClicked(pos):
                     tela = 0
 
         if tela == 3:
             # SETTINGS
-            win.fill(cor_fundo)
-            texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
-            back_button.draw()
-            music_button.draw()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # MÚSICA LIGADA
-                if music_button.isOver(pos):
+                if music_button.isClicked(pos):
                     music_button.clicked = not music_button.clicked
                     play = not play
                     if play:
                         pygame.mixer.music.play()
                     else:
                         pygame.mixer.music.stop()
-                if back_button.isOver(pos):
+                if back_button.isClicked(pos):
                     tela = 0
 
     pygame.display.update()
