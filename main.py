@@ -95,7 +95,7 @@ class button:
         return False
 
 
-class player:
+class boneco:
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -140,7 +140,7 @@ music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
-
+hero = boneco(50, 300, 64, 64)
 pygame.mixer.music.play()
 while run:
 
@@ -164,7 +164,23 @@ while run:
         quit_button.draw()
 
     if tela == 1:
-        win.fill(cor_fundo)
+        win.blit(bg, (0, 0))
+        hero.draw(win)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and hero.x > hero.vel:
+            hero.x -= hero.vel
+            hero.right = False
+            hero.left = True
+            hero.standing = False
+        elif keys[pygame.K_RIGHT] and hero.x + hero.width < larg - hero.vel:
+            hero.x += hero.vel
+            hero.right = True
+            hero.left = False
+            hero.standing = False
+        else:
+            hero.walkCount = 0
+            hero.standing = True
 
     if tela == 2:
         win.fill(cor_fundo)
