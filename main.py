@@ -6,6 +6,7 @@ pygame.mixer.init()
 larg, alt = 800, 400
 run = True
 tela = -1
+fase = 0
 play = True
 
 
@@ -13,6 +14,30 @@ pygame.mixer.music.load("resources/song.mp3")
 bg = pygame.image.load("resources/blackhole.png")
 logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
+
+walkLeft = [
+    pygame.image.load("resources/character/L1.png"),
+    pygame.image.load("resources/character/L2.png"),
+    pygame.image.load("resources/character/L3.png"),
+    pygame.image.load("resources/character/L4.png"),
+    pygame.image.load("resources/character/L5.png"),
+    pygame.image.load("resources/character/L6.png"),
+    pygame.image.load("resources/character/L7.png"),
+    pygame.image.load("resources/character/L8.png"),
+    pygame.image.load("resources/character/L9.png"),
+]
+walkRight = [
+    pygame.image.load("resources/character/R1.png"),
+    pygame.image.load("resources/character/R2.png"),
+    pygame.image.load("resources/character/R3.png"),
+    pygame.image.load("resources/character/R4.png"),
+    pygame.image.load("resources/character/R5.png"),
+    pygame.image.load("resources/character/R6.png"),
+    pygame.image.load("resources/character/R7.png"),
+    pygame.image.load("resources/character/R8.png"),
+    pygame.image.load("resources/character/R9.png"),
+]
+
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
 
@@ -71,6 +96,36 @@ class button:
         return False
 
 
+class boneco:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.vel = 5
+        self.walkCount = 0
+        self.left = False
+        self.right = False
+        self.standing = True
+
+    def draw(self, win):
+        if self.walkCount + 1 >= 27:
+            self.walkCount = 0
+
+        if not self.standing:
+            if self.left:
+                win.blit(walkLeft[self.walkCount // 3], (self.x, self.y))
+                self.walkCount += 1
+            elif self.right:
+                win.blit(walkRight[self.walkCount // 3], (self.x, self.y))
+                self.walkCount += 1
+        else:
+            if self.right:
+                win.blit(walkRight[0], (self.x, self.y))
+            else:
+                win.blit(walkLeft[0], (self.x, self.y))
+
+
 # BOTÕES
 
 # botão para tela do jogo
@@ -86,8 +141,8 @@ music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
 
-
-# pygame.mixer.music.play()
+hero = boneco(50, 300, 64, 64)
+pygame.mixer.music.play()
 while run:
 
     # telas
@@ -110,7 +165,23 @@ while run:
         quit_button.draw()
 
     if tela == 1:
-        win.fill(cor_fundo)
+        win.blit(bg, (0, 0))
+        hero.draw(win)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and hero.x > hero.vel:
+            hero.x -= hero.vel
+            hero.right = False
+            hero.left = True
+            hero.standing = False
+        elif keys[pygame.K_RIGHT] and hero.x + hero.width < larg - hero.vel:
+            hero.x += hero.vel
+            hero.right = True
+            hero.left = False
+            hero.standing = False
+        else:
+            hero.walkCount = 0
+            hero.standing = True
 
     if tela == 2:
         win.fill(cor_fundo)
@@ -142,7 +213,7 @@ while run:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 tela = 0
 
-        elif tela == 0:
+        if tela == 0:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button.isClicked(pos):
                     tela = 1
@@ -154,17 +225,17 @@ while run:
                     pygame.time.delay(500)
                     run = False
 
-        elif tela == 1:
+        if tela == 1:
             pass
             # PLAY
 
-        elif tela == 2:
+        if tela == 2:
             # como jogar
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button.isClicked(pos):
                     tela = 0
 
-        elif tela == 3:
+        if tela == 3:
             # SETTINGS
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # MÚSICA LIGADA
