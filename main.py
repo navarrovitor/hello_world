@@ -6,7 +6,7 @@ pygame.mixer.init()
 larg, alt = 800, 400
 run = True
 tela = -1
-fase = 0
+level = 0
 play = True
 
 
@@ -46,10 +46,12 @@ ret_logo = logo.get_rect()
 vel_logo = [1, 1]
 
 # cores
-cor_btn = (69, 72, 81)
-cor_btn_clicked = (47, 49, 55)
+cor_btn = (47, 47, 47)
+cor_btn_clicked = (20, 20, 20)
 cor_fundo = (228, 187, 151)
+cor_porta = (59, 40, 22)
 black = (0, 0, 0)
+white = (214, 214, 177)
 
 # setup do display
 win = pygame.display.set_mode((larg, alt))
@@ -80,7 +82,7 @@ class button:
             pygame.draw.rect(
                 win, self.cor, (self.x, self.y, self.width, self.height), 0
             )
-        texto = fonte_txt.render(self.txt, 1, black)
+        texto = fonte_txt.render(self.txt, 1, white)
         win.blit(
             texto,
             (
@@ -102,7 +104,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.vel = 0.5
         self.walkCount = 0
         self.left = False
         self.right = False
@@ -139,9 +141,11 @@ quit_button = button(cor_btn, 550, 275, 200, 50, "SAIR")
 # botão para ligar ou desligar música
 music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
 # botão para voltar para a tela inicial
-back_button = button(cor_btn, 50, 300, 200, 50, "VOLTAR")
+back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
-hero = boneco(50, 300, 128, 128)
+door = button(cor_porta, 725, 300, 30, 50, "")
+
+hero = boneco(50, 300, 64, 64)
 pygame.mixer.music.play()
 while run:
 
@@ -155,17 +159,29 @@ while run:
         if ret_logo.top < 0 or ret_logo.bottom > alt:
             vel_logo[1] = -vel_logo[1]
         time.sleep(10 / 5000)
+        texto(
+            "pressione qualquer tecla para continuar",
+            (larg / 4, 350),
+            fonte_txt,
+            (47, 47, 47),
+        )
 
     if tela == 0:
         win.blit(bg, (0, 0))
-        texto("<Hello World/>", (50, 20), fonte_ttl, (255, 255, 255))
+        texto("Hello World", (larg / 10, alt / 8), fonte_ttl, (white))
         play_button.draw()
         how_to_play_button.draw()
         settings_button.draw()
         quit_button.draw()
 
     if tela == 1:
-        win.blit(bg, (0, 0))
+        win.fill(cor_fundo)
+        if level == 0:
+            texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto("vá até a porta", (larg / 10, alt / 4), fonte_txt, (black))
+            door.draw()
+            # for i in range(5):
+
         hero.draw(win)
         keys = pygame.key.get_pressed()
 
@@ -185,20 +201,20 @@ while run:
 
     if tela == 2:
         win.fill(cor_fundo)
-        texto("Como Jogar?", (50, 50), fonte_ttl, (255, 255, 255))
+        texto("COMO JOGAR", (larg / 10, alt / 8), fonte_ttl)
         texto(
-            "Você poderá controlar o jogador de sua escolha com os botões do teclado.",
-            ((50, 100), (100, 70)),
+            "Faça o boneco andar usando as setas do teclado. Selecione com a tecla de ESPAÇO",
+            (larg / 32, alt / 3),
         )
         texto(
             "O objetivo do jogo é passar pelos desafios referentes a programação.",
-            ((50, 115), (115, 75)),
+            (larg / 32, alt / 2),
         )
         back_button.draw()
 
     if tela == 3:
         win.fill(cor_fundo)
-        texto("CONFIGURAÇÕES", (50, 20), fonte_ttl)
+        texto("CONFIGURAÇÕES", (larg / 10, alt / 8), fonte_ttl)
         back_button.draw()
         music_button.draw()
 
