@@ -15,7 +15,7 @@ bg = pygame.image.load("resources/blackhole.png")
 logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
 
-walkLeft = [
+walkLeft_hero = [
     pygame.image.load("resources/character/L1.png"),
     pygame.image.load("resources/character/L2.png"),
     pygame.image.load("resources/character/L3.png"),
@@ -26,7 +26,7 @@ walkLeft = [
     pygame.image.load("resources/character/L8.png"),
     pygame.image.load("resources/character/L9.png"),
 ]
-walkRight = [
+walkRight_hero = [
     pygame.image.load("resources/character/R1.png"),
     pygame.image.load("resources/character/R2.png"),
     pygame.image.load("resources/character/R3.png"),
@@ -37,6 +37,29 @@ walkRight = [
     pygame.image.load("resources/character/R8.png"),
     pygame.image.load("resources/character/R9.png"),
 ]
+walkLeft_not_hero = [
+    pygame.image.load("resources/character/L1E.png"),
+    pygame.image.load("resources/character/L2E.png"),
+    pygame.image.load("resources/character/L3E.png"),
+    pygame.image.load("resources/character/L4E.png"),
+    pygame.image.load("resources/character/L5E.png"),
+    pygame.image.load("resources/character/L6E.png"),
+    pygame.image.load("resources/character/L7E.png"),
+    pygame.image.load("resources/character/L8E.png"),
+    pygame.image.load("resources/character/L9E.png"),
+]
+walkRight_not_hero = [
+    pygame.image.load("resources/character/R1E.png"),
+    pygame.image.load("resources/character/R2E.png"),
+    pygame.image.load("resources/character/R3E.png"),
+    pygame.image.load("resources/character/R4E.png"),
+    pygame.image.load("resources/character/R5E.png"),
+    pygame.image.load("resources/character/R6E.png"),
+    pygame.image.load("resources/character/R7E.png"),
+    pygame.image.load("resources/character/R8E.png"),
+    pygame.image.load("resources/character/R9E.png"),
+]
+
 
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
@@ -109,23 +132,38 @@ class boneco:
         self.left = False
         self.right = False
         self.standing = True
+        self.sprite = True
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
-        if not self.standing:
-            if self.left:
-                win.blit(walkLeft[self.walkCount // 3], (self.x, self.y))
-                self.walkCount += 1
-            elif self.right:
-                win.blit(walkRight[self.walkCount // 3], (self.x, self.y))
-                self.walkCount += 1
-        else:
-            if self.right:
-                win.blit(walkRight[0], (self.x, self.y))
+        if self.sprite:
+            if not self.standing:
+                if self.left:
+                    win.blit(walkLeft_hero[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+                elif self.right:
+                    win.blit(walkRight_hero[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
             else:
-                win.blit(walkLeft[0], (self.x, self.y))
+                if self.right:
+                    win.blit(walkRight_hero[0], (self.x, self.y))
+                else:
+                    win.blit(walkLeft_hero[0], (self.x, self.y))
+        else:
+            if not self.standing:
+                if self.left:
+                    win.blit(walkLeft_not_hero[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+                elif self.right:
+                    win.blit(walkRight_not_hero[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+            else:
+                if self.right:
+                    win.blit(walkRight_not_hero[0], (self.x, self.y))
+                else:
+                    win.blit(walkLeft_not_hero[0], (self.x, self.y))
 
 
 # BOTÕES
@@ -140,10 +178,11 @@ settings_button = button(cor_btn, 550, 200, 200, 50, "CONFIGURAÇÕES")
 quit_button = button(cor_btn, 550, 275, 200, 50, "SAIR")
 # botão para ligar ou desligar música
 music_button = button(cor_btn, 525, 150, 200, 50, "MÚSICA")
+# botão para mudar sprite
+sprite_button = button(cor_btn, 525, 225, 200, 50, "HERÓI")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
-door = button(cor_porta, 725, 300, 30, 50, "")
 
 hero = boneco(50, 300, 64, 64)
 pygame.mixer.music.play()
@@ -179,8 +218,6 @@ while run:
         if level == 0:
             texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
             texto("vá até a porta", (larg / 10, alt / 4), fonte_txt, (black))
-            door.draw()
-            # for i in range(5):
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
@@ -217,6 +254,7 @@ while run:
         texto("CONFIGURAÇÕES", (larg / 10, alt / 8), fonte_ttl)
         back_button.draw()
         music_button.draw()
+        sprite_button.draw()
 
     # EVENTOS
     for event in pygame.event.get():
@@ -262,6 +300,13 @@ while run:
                         pygame.mixer.music.play()
                     else:
                         pygame.mixer.music.stop()
+                if sprite_button.isClicked(pos):
+                    sprite_button.clicked = not sprite_button.clicked
+                    if sprite_button.clicked:
+                        sprite_button.txt = "GOBLIN"
+                    else:
+                        sprite_button.txt = "HERÓI"
+                    hero.sprite = not hero.sprite
                 if back_button.isClicked(pos):
                     tela = 0
 
