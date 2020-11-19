@@ -2,6 +2,7 @@ import pygame, time
 
 pygame.init()
 pygame.mixer.init()
+clock = pygame.time.Clock()
 
 larg, alt = 800, 400
 run = True
@@ -14,6 +15,12 @@ pygame.mixer.music.load("resources/song.mp3")
 bg = pygame.image.load("resources/blackhole.png")
 logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
+apple = pygame.image.load("resources/apple.png")
+apple = pygame.transform.scale(apple, (64, 64))
+banana = pygame.image.load("resources/banana.png")
+banana = pygame.transform.scale(banana, (64, 64))
+bh = pygame.image.load("resources/blackhole_prop.png")
+bh = pygame.transform.scale(bh, (64, 64))
 
 walkLeft_hero = [
     pygame.image.load("resources/character/L1.png"),
@@ -72,7 +79,6 @@ vel_logo = [1, 1]
 cor_btn = (47, 47, 47)
 cor_btn_clicked = (20, 20, 20)
 cor_fundo = (228, 187, 151)
-cor_porta = (59, 40, 22)
 black = (0, 0, 0)
 white = (214, 214, 177)
 
@@ -84,6 +90,23 @@ pygame.display.set_caption("Hello World")
 def texto(text, pos, ft=fonte_txt, cor=black):
     txt = ft.render(text, 1, cor)
     win.blit(txt, pos)
+
+
+class prop:
+    def __init__(self, img, x, y):
+        self.img, self.x, self.y = img, x, y
+        self.rect = img.get_rect(topleft=(self.x, self.y))
+
+    def draw(self, win=win):
+        win.blit(self.img, (self.x, self.y))
+        ###
+        # pygame.draw.rect(win, black, self.rect, 0)
+        ###
+
+    def isOver(self, x):
+        if x > self.x and x < self.x + self.rect[2]:
+            return True
+        return False
 
 
 class button:
@@ -127,7 +150,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 0.5
+        self.vel = 5
         self.walkCount = 0
         self.left = False
         self.right = False
@@ -183,11 +206,11 @@ sprite_button = button(cor_btn, 525, 225, 200, 50, "HERÓI")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
-
+bh = prop(bh, 700, 300)
 hero = boneco(50, 300, 64, 64)
 pygame.mixer.music.play()
 while run:
-
+    clock.tick(60)
     # telas
     if tela == -1:
         win.fill(black)
@@ -197,7 +220,6 @@ while run:
             vel_logo[0] = -vel_logo[0]
         if ret_logo.top < 0 or ret_logo.bottom > alt:
             vel_logo[1] = -vel_logo[1]
-        time.sleep(10 / 5000)
         texto(
             "pressione qualquer tecla para continuar",
             (larg / 4, 350),
@@ -217,11 +239,15 @@ while run:
         win.fill(cor_fundo)
         if level == 0:
             texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
-            texto("vá até a porta", (larg / 10, alt / 4), fonte_txt, (black))
+            texto("Vá até o buraco negro", (larg / 10, alt / 4), fonte_txt, (black))
+            bh.draw()
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
 
+        if level == 0:
+            if bh.isOver(hero.x):
+                hero.x = 50
         if keys[pygame.K_LEFT] and hero.x > hero.vel:
             hero.x -= hero.vel
             hero.right = False
