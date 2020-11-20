@@ -166,7 +166,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 10
+        self.vel = 15
         self.walkCount = 0
         self.left = False
         self.right = False
@@ -233,8 +233,8 @@ figuras.append(leaf)
 figuras.append(apple)
 figuras.append(banana)
 figuras.append(rose)
-figuras.append(star)
 figuras.append(tree)
+figuras.append(star)
 hero = boneco(50, 300, 64, 64)
 
 start_ticks = pygame.time.get_ticks()
@@ -242,7 +242,7 @@ ticks_elapsed = pygame.time.get_ticks()
 
 initial_points = 10
 pontuações = []
-# pygame.mixer.music.play()
+# pygame.mixer.music.play() ##################################################
 while run:
     clock.tick(60)
     # telas
@@ -274,15 +274,12 @@ while run:
         time_elapsed = (pygame.time.get_ticks() - ticks_elapsed) / 1000
         win.fill(cor_fundo)
         texto(str(time_elapsed), (larg - 150, alt / 8), fonte_ttl, (black))
-        ##
-        texto(str(initial_points), (larg - 150, alt / 4), fonte_ttl, (black))
-        ##
         if seconds > 2:
-            initial_points -= 2
+            initial_points -= 1
             start_ticks = pygame.time.get_ticks()
         if level == 0:
             texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
-            texto("Vá até o buraco negro", (larg / 10, alt / 4), fonte_txt, (black))
+            texto("Vá até o buraco negro", (larg / 10, alt / 2), fonte_txt, (black))
             bh.draw()
             if bh.count < times_bh_appear:
                 if bh.collision(hero.x):
@@ -290,28 +287,54 @@ while run:
                     bh.count += 1
             else:
                 bh.img = door
-                texto(
-                    "para aprender recursividade você precisa primeiro aprender sobre recursividade",
-                    (larg / 12, alt / 2),
-                    fonte_txt,
-                    (black),
-                )
                 if bh.collision(hero.x):
-                    level = 1
                     pontuações.append(initial_points)
                     initial_points = 10
+                    level = 1
         if level == 1:
-            texto("OS ALGORITMOS DE BUSCA", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto("BUSCA SEQUENCIAL", (larg / 10, alt / 8), fonte_ttl, (black))
             texto(
-                "busca sequencial (note a velocidade)",
+                "Note a velocidade",
                 (larg / 10, alt / 4),
+                fonte_txt,
+                (black),
+            )
+            texto(
+                "Busque a estrela!",
+                (larg / 10, alt / 2),
                 fonte_txt,
                 (black),
             )
             hero.vel = 5
             for i in range(len(figuras)):
-                figuras[i].x = larg / (i + 1)
+                figuras[i].x = larg / 2 - (i * 75)
                 figuras[i].draw()
+            if figuras[-1].collision(hero.x):
+                pontuações.append(initial_points)
+                initial_points = 10
+                level = 2
+        if level == 2:
+            texto("BUSCA BINÁRIA", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto(
+                "Note a velocidade",
+                (larg / 10, alt / 4),
+                fonte_txt,
+                (black),
+            )
+            texto(
+                "Busque a estrela!",
+                (larg / 10, alt / 2),
+                fonte_txt,
+                (black),
+            )
+            hero.vel = 10
+            for i in range(len(figuras)):
+                figuras[i].x = larg / 2 + (i * 65)
+                figuras[i].draw()
+            if figuras[-1].collision(hero.x):
+                pontuações.append(initial_points)
+                initial_points = 10
+                tela = 4
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
@@ -334,12 +357,16 @@ while run:
         win.fill(cor_fundo)
         texto("COMO JOGAR", (larg / 10, alt / 8), fonte_ttl)
         texto(
-            "Faça o boneco andar usando as setas do teclado. Selecione com a tecla de ESPAÇO",
+            "Faça o boneco andar usando as setas do teclado. Siga as instruções",
             (larg / 32, alt / 3),
         )
         texto(
             "O objetivo do jogo é passar pelos desafios referentes a programação.",
             (larg / 32, alt / 2),
+        )
+        texto(
+            "Quanto mais rápido você for, mais pontos você ganha.",
+            (larg / 32, alt / 2 + alt / 8),
         )
         back_button.draw()
 
@@ -350,6 +377,31 @@ while run:
         music_button.draw()
         sprite_button.draw()
 
+    if tela == 4:
+        win.blit(bg, (0, 0))
+        texto(
+            "Parabéns, você finalizou o jogo!", (larg / 12, alt / 8), fonte_ttl, (white)
+        )
+        texto("Você aprendeu que:", (larg / 12, alt / 4), fonte_txt, (white))
+        texto(
+            "1. Para aprender recursividade, você primeiro precisa aprender recursividade",
+            (larg / 12, alt / 3),
+            fonte_txt,
+            (white),
+        )
+        texto(
+            "2. O algoritmo de busca sequencial não é tão rápido quanto o de busca binária",
+            (larg / 12, alt / 3 + 25),
+            fonte_txt,
+            (white),
+        )
+        texto(
+            f"Você fez {sum(pontuações)} pontos",
+            (larg / 12, alt / 2),
+            fonte_txt,
+            (white),
+        )
+        quit_button.draw()
     # EVENTOS
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
@@ -403,8 +455,11 @@ while run:
                     hero.sprite = not hero.sprite
                 if back_button.isClicked(pos):
                     tela = 0
+        elif tela == 4:
+            if quit_button.isClicked(pos):
+                pygame.time.delay(500)
+                run = False
 
     pygame.display.update()
 
-print(pontuações)
 pygame.quit()
