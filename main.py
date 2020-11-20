@@ -17,6 +17,8 @@ logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
 apple = pygame.image.load("resources/apple.png")
 apple = pygame.transform.scale(apple, (64, 64))
+door = pygame.image.load("resources/door.png")
+door = pygame.transform.scale(door, (64, 64))
 banana = pygame.image.load("resources/banana.png")
 banana = pygame.transform.scale(banana, (64, 64))
 bh = pygame.image.load("resources/blackhole_prop.png")
@@ -96,6 +98,7 @@ class prop:
     def __init__(self, img, x, y):
         self.img, self.x, self.y = img, x, y
         self.rect = img.get_rect(topleft=(self.x, self.y))
+        self.count = 0
 
     def draw(self, win=win):
         win.blit(self.img, (self.x, self.y))
@@ -208,7 +211,7 @@ back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
 bh = prop(bh, 700, 300)
 hero = boneco(50, 300, 64, 64)
-pygame.mixer.music.play()
+# pygame.mixer.music.play()
 while run:
     clock.tick(60)
     # telas
@@ -238,16 +241,21 @@ while run:
     if tela == 1:
         win.fill(cor_fundo)
         if level == 0:
-            texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto("RECURSIVIDADE", (larg / 10, alt / 8), fonte_ttl, (black))
             texto("Vá até o buraco negro", (larg / 10, alt / 4), fonte_txt, (black))
             bh.draw()
+            if bh.count < 3:
+                if bh.isOver(hero.x):
+                    hero.x = 50
+                    bh.count += 1
+            else:
+                bh.img = door
+                if bh.isOver(hero.x):
+                    level = 1
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
 
-        if level == 0:
-            if bh.isOver(hero.x):
-                hero.x = 50
         if keys[pygame.K_LEFT] and hero.x > hero.vel:
             hero.x -= hero.vel
             hero.right = False
