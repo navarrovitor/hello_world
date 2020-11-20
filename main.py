@@ -21,6 +21,14 @@ door = pygame.image.load("resources/door.png")
 door = pygame.transform.scale(door, (64, 64))
 banana = pygame.image.load("resources/banana.png")
 banana = pygame.transform.scale(banana, (64, 64))
+leaf = pygame.image.load("resources/leaf.png")
+leaf = pygame.transform.scale(leaf, (64, 64))
+rose = pygame.image.load("resources/rose.png")
+rose = pygame.transform.scale(rose, (64, 64))
+star = pygame.image.load("resources/star.png")
+star = pygame.transform.scale(star, (64, 64))
+tree = pygame.image.load("resources/tree.png")
+tree = pygame.transform.scale(tree, (64, 64))
 bh = pygame.image.load("resources/blackhole_prop.png")
 bh = pygame.transform.scale(bh, (64, 64))
 
@@ -153,7 +161,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.vel = 10
         self.walkCount = 0
         self.left = False
         self.right = False
@@ -210,6 +218,12 @@ sprite_button = button(cor_btn, 525, 225, 200, 50, "HERÓI")
 back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
 bh = prop(bh, 700, 300)
+leaf = prop(leaf, 700, 300)
+apple = prop(apple, 700, 300)
+banana = prop(banana, 700, 300)
+rose = prop(rose, 700, 300)
+star = prop(star, 700, 300)
+tree = prop(tree, 700, 300)
 hero = boneco(50, 300, 64, 64)
 # pygame.mixer.music.play()
 while run:
@@ -241,7 +255,7 @@ while run:
     if tela == 1:
         win.fill(cor_fundo)
         if level == 0:
-            texto("RECURSIVIDADE", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
             texto("Vá até o buraco negro", (larg / 10, alt / 4), fonte_txt, (black))
             bh.draw()
             if bh.count < 3:
@@ -252,6 +266,16 @@ while run:
                 bh.img = door
                 if bh.isOver(hero.x):
                     level = 1
+        if level == 1:
+            texto("OS ALGORITMOS DE BUSCA", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto(
+                "busca sequencial (note a velocidade)",
+                (larg / 10, alt / 4),
+                fonte_txt,
+                (black),
+            )
+            hero.vel = 5
+            leaf.draw()
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
