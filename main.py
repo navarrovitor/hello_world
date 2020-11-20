@@ -1,4 +1,5 @@
 import pygame, time
+import random as rd
 
 pygame.init()
 pygame.mixer.init()
@@ -9,21 +10,33 @@ run = True
 tela = -1
 level = 0
 play = True
+times_bh_appear = rd.randint(1, 4)
 
 
 pygame.mixer.music.load("resources/song.mp3")
 bg = pygame.image.load("resources/blackhole.png")
 logo = pygame.image.load("resources/logo_transparent.png")
 logo = pygame.transform.scale(logo, (300, 300))
+
 apple = pygame.image.load("resources/apple.png")
 apple = pygame.transform.scale(apple, (64, 64))
 door = pygame.image.load("resources/door.png")
 door = pygame.transform.scale(door, (64, 64))
 banana = pygame.image.load("resources/banana.png")
 banana = pygame.transform.scale(banana, (64, 64))
+leaf = pygame.image.load("resources/leaf.png")
+leaf = pygame.transform.scale(leaf, (64, 64))
+rose = pygame.image.load("resources/rose.png")
+rose = pygame.transform.scale(rose, (64, 64))
+star = pygame.image.load("resources/star.png")
+star = pygame.transform.scale(star, (64, 64))
+tree = pygame.image.load("resources/tree.png")
+tree = pygame.transform.scale(tree, (64, 64))
 bh = pygame.image.load("resources/blackhole_prop.png")
 bh = pygame.transform.scale(bh, (64, 64))
 
+
+# SPRITES
 walkLeft_hero = [
     pygame.image.load("resources/character/L1.png"),
     pygame.image.load("resources/character/L2.png"),
@@ -69,7 +82,7 @@ walkRight_not_hero = [
     pygame.image.load("resources/character/R9E.png"),
 ]
 
-
+# FONTES
 fonte_ttl = pygame.font.SysFont("roboto", 40)
 fonte_txt = pygame.font.SysFont("roboto", 20)
 
@@ -88,7 +101,7 @@ white = (214, 214, 177)
 win = pygame.display.set_mode((larg, alt))
 pygame.display.set_caption("Hello World")
 
-
+### FUNÇÕES E CLASSES
 def texto(text, pos, ft=fonte_txt, cor=black):
     txt = ft.render(text, 1, cor)
     win.blit(txt, pos)
@@ -106,7 +119,7 @@ class prop:
         # pygame.draw.rect(win, black, self.rect, 0)
         ###
 
-    def isOver(self, x):
+    def collision(self, x):
         if x > self.x and x < self.x + self.rect[2]:
             return True
         return False
@@ -153,7 +166,7 @@ class boneco:
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.vel = 10
         self.walkCount = 0
         self.left = False
         self.right = False
@@ -193,7 +206,6 @@ class boneco:
 
 
 # BOTÕES
-
 # botão para tela do jogo
 play_button = button(cor_btn, 550, 50, 200, 50, "JOGAR")
 # botão para tela de como jogar
@@ -209,8 +221,27 @@ sprite_button = button(cor_btn, 525, 225, 200, 50, "HERÓI")
 # botão para voltar para a tela inicial
 back_button = button(cor_btn, larg / 10, 300, 200, 50, "VOLTAR")
 
+figuras = []
 bh = prop(bh, 700, 300)
+leaf = prop(leaf, 700, 300)
+apple = prop(apple, 700, 300)
+banana = prop(banana, 700, 300)
+rose = prop(rose, 700, 300)
+star = prop(star, 700, 300)
+tree = prop(tree, 700, 300)
+figuras.append(leaf)
+figuras.append(apple)
+figuras.append(banana)
+figuras.append(rose)
+figuras.append(star)
+figuras.append(tree)
 hero = boneco(50, 300, 64, 64)
+
+start_ticks = pygame.time.get_ticks()
+ticks_elapsed = pygame.time.get_ticks()
+
+initial_points = 10
+pontuações = []
 # pygame.mixer.music.play()
 while run:
     clock.tick(60)
@@ -239,19 +270,48 @@ while run:
         quit_button.draw()
 
     if tela == 1:
+        seconds = (pygame.time.get_ticks() - start_ticks) / 1000
+        time_elapsed = (pygame.time.get_ticks() - ticks_elapsed) / 1000
         win.fill(cor_fundo)
+        texto(str(time_elapsed), (larg - 150, alt / 8), fonte_ttl, (black))
+        ##
+        texto(str(initial_points), (larg - 150, alt / 4), fonte_ttl, (black))
+        ##
+        if seconds > 2:
+            initial_points -= 2
+            start_ticks = pygame.time.get_ticks()
         if level == 0:
-            texto("RECURSIVIDADE", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto("O QUE É RECURSIVIDADE?", (larg / 10, alt / 8), fonte_ttl, (black))
             texto("Vá até o buraco negro", (larg / 10, alt / 4), fonte_txt, (black))
             bh.draw()
-            if bh.count < 3:
-                if bh.isOver(hero.x):
+            if bh.count < times_bh_appear:
+                if bh.collision(hero.x):
                     hero.x = 50
                     bh.count += 1
             else:
                 bh.img = door
-                if bh.isOver(hero.x):
+                texto(
+                    "para aprender recursividade você precisa primeiro aprender sobre recursividade",
+                    (larg / 12, alt / 2),
+                    fonte_txt,
+                    (black),
+                )
+                if bh.collision(hero.x):
                     level = 1
+                    pontuações.append(initial_points)
+                    initial_points = 10
+        if level == 1:
+            texto("OS ALGORITMOS DE BUSCA", (larg / 10, alt / 8), fonte_ttl, (black))
+            texto(
+                "busca sequencial (note a velocidade)",
+                (larg / 10, alt / 4),
+                fonte_txt,
+                (black),
+            )
+            hero.vel = 5
+            for i in range(len(figuras)):
+                figuras[i].x = larg / (i + 1)
+                figuras[i].draw()
 
         hero.draw(win)
         keys = pygame.key.get_pressed()
@@ -346,5 +406,5 @@ while run:
 
     pygame.display.update()
 
-
+print(pontuações)
 pygame.quit()
